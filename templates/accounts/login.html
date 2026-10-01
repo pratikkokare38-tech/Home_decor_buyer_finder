@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Seller Login - Home Decor Buyer Finder{% endblock %}
+
+{% block content %}
+<div class="search-container" style="max-width: 460px; margin-top: 2rem;">
+    <div class="card-white">
+        <div class="search-header" style="margin-bottom: 1.75rem;">
+            <h2>Seller Sign In</h2>
+            <p class="search-subtitle" style="font-size: 0.95rem;">Access live US buyer leads & send pitch campaigns</p>
+        </div>
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            {% if request.GET.next %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+            {% endif %}
+
+            <div class="form-group">
+                <label class="form-label" for="id_username">Username</label>
+                <input type="text" name="username" id="id_username" class="form-control" placeholder="Enter your username" required autofocus>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="id_password">Password</label>
+                <input type="password" name="password" id="id_password" class="form-control" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">
+                Sign In to Dashboard →
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem; border-top: 1px solid var(--border-light); padding-top: 1rem; font-size: 0.875rem; color: var(--text-muted);">
+            Don't have a seller account yet? 
+            <a href="{% url 'register' %}" style="font-weight: 600; color: var(--primary);">Register Seller Account</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Seller Profile - Home Decor Buyer Finder{% endblock %}
+
+{% block content %}
+<div class="search-container" style="max-width: 680px;">
+    <div class="card-white">
+        <div class="search-header" style="margin-bottom: 1.75rem; text-align: left;">
+            <h2>Seller Settings & Compliance Profile</h2>
+            <p class="search-subtitle" style="margin: 0;">Manage your brand info and CAN-SPAM email settings</p>
+        </div>
+
+        <form method="post" action="{% url 'profile_page' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label class="form-label">Company / Brand Name</label>
+                {{ form.company_name }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Company Website URL</label>
+                {{ form.website }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Product Categories Handled</label>
+                {{ form.product_categories }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Default Pitch From Name</label>
+                {{ form.from_name }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Default From Email</label>
+                {{ form.from_email }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Physical Postal Address (Email Footer Compliance)</label>
+                {{ form.postal_address }}
+            </div>
+
+            <div style="display: flex; gap: 0.85rem; margin-top: 1.75rem;">
+                <button type="submit" class="btn-primary">Save Profile Settings</button>
+                <a href="{% url 'search_page' %}" class="btn-secondary">Back to Search</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

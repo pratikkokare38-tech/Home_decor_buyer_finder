@@ -1,0 +1,262 @@
+:root {
+    /* Primary Backgrounds */
+    --bg-main: #F8FAFC;
+    --bg-card: #FFFFFF;
+    --bg-surface: #FFFFFF;
+    --bg-subtle: #F1F5F9;
+    --bg-hover: #F8FAFC;
+    
+    /* Borders */
+    --border-light: #E2E8F0;
+    --border-medium: #CBD5E1;
+    --border-focus: #DC2626;
+    
+    /* Brand Primary: Crimson Red & Light Red */
+    --primary: #DC2626;
+    --primary-hover: #B91C1C;
+    --primary-light: #FEF2F2;
+    --primary-border: #FECACA;
+    --primary-text: #991B1B;
+    
+    /* Brand Secondary: Forest/Emerald Green & Light Green */
+    --success: #059669;
+    --success-hover: #047857;
+    --success-light: #ECFDF5;
+    --success-border: #A7F3D0;
+    --success-text: #065F46;
+    
+    /* Accents & Status */
+    --warning: #D97706;
+    --warning-light: #FFFBEB;
+    --warning-border: #FDE68A;
+    --warning-text: #92400E;
+    
+    --danger: #DC2626;
+    --danger-light: #FEF2F2;
+    --danger-border: #FECACA;
+    --danger-text: #991B1B;
+    
+    /* Typography: Ink Black & Slates */
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #64748B;
+    --text-white: #FFFFFF;
+    
+    /* Border Radii */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-full: 9999px;
+    
+    /* Professional Drop Shadows */
+    --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+    --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 6px 16px -3px rgba(15, 23, 42, 0.05);
+    --shadow-elevated: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+    --shadow-red-focus: 0 0 0 3px rgba(220, 38, 38, 0.15);
+    --shadow-green-focus: 0 0 0 3px rgba(5, 150, 105, 0.15);
+    
+    --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    min-height: 100vh;
+    background-image: 
+        radial-gradient(circle at 10% 10%, rgba(220, 38, 38, 0.02) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(5, 150, 105, 0.02) 0%, transparent 40%);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    padding: 2.5rem 1.5rem;
+}
+
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Typography with tight letter-spacing */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+}
+
+h1 { font-size: 2.15rem; }
+h2 { font-size: 1.65rem; }
+h3 { font-size: 1.25rem; }
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+a:hover {
+    color: var(--primary-hover);
+}
+
+/* Header & Navbar - Clean Crisp White with Subtle Border */
+.navbar-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-light);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-xs);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 1.5rem;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+}
+
+.brand-logo:hover {
+    color: var(--text-primary);
+}
+
+.logo-accent {
+    color: var(--primary);
+}
+
+.badge-usa {
+    background: #0F172A;
+    color: #FFFFFF;
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 3px 7px;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    border: 1px solid #1E293B;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.925rem;
+    padding: 0.4rem 0.65rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.15s ease;
+}
+
+.nav-link:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-subtle);
+}
+
+.user-profile-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-light);
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--radius-full);
+}
+
+.user-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+
+.user-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.btn-link-logout {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.825rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-left: 0.25rem;
+    padding: 2px 4px;
+}
+
+.btn-link-logout:hover {
+    color: var(--danger);
+    text-decoration: underline;
+}
+
+/* Footer */
+.app-footer {
+    background: #FFFFFF;
+    border-top: 1px solid var(--border-light);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-top: auto;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.footer-disclaimer {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.inline-form {
+    display: inline;
+}

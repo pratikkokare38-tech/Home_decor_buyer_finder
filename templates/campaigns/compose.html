@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Compose Email Pitch Campaign - DecorFinder{% endblock %}
+
+{% block content %}
+<div class="search-container" style="max-width: 1050px;">
+    <div class="results-header">
+        <div>
+            <h1>Compose Buyer Pitch Email</h1>
+            <p class="search-subtitle">Targeting <strong style="color: var(--text-primary);">{{ buyers.count }} selected buyers</strong> with personalized email pitches.</p>
+        </div>
+        <div>
+            <a href="{% url 'search_page' %}" class="btn-secondary">← Back to Search</a>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <!-- Left: Pitch Form -->
+        <div class="card-white">
+            <h3 style="margin-bottom: 1.25rem;">Template Editor</h3>
+
+            <form id="campaignForm">
+                {% csrf_token %}
+                <input type="hidden" id="buyerIdsInput" value="{{ buyer_ids_str }}">
+
+                <div class="form-group">
+                    <label class="form-label">Subject Line</label>
+                    <input type="text" id="subjectInput" class="form-control" value="Wholesale Home Decor Opportunity for {{buyer_name}}" required>
+                </div>
+
+                <!-- Placeholder Chips -->
+                <div style="margin-bottom: 1.25rem;">
+                    <span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Insert Dynamic Tags:</span>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.4rem;">
+                        <button type="button" class="chip" onclick="insertPlaceholder('{{buyer_name}}')">{{buyer_name}}</button>
+                        <button type="button" class="chip" onclick="insertPlaceholder('{{city}}')">{{city}}</button>
+                        <button type="button" class="chip" onclick="insertPlaceholder('{{seller_company}}')">{{seller_company}}</button>
+                        <button type="button" class="chip" onclick="insertPlaceholder('{{seller_name}}')">{{seller_name}}</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Pitch Body (HTML Supported)</label>
+                    <textarea id="bodyInput" class="form-control" rows="10" required>Hello {{buyer_name}},
+
+We noticed your home decor store in {{city}} and loved your collection!
+
+We are {{seller_company}}, a US manufacturer of high quality hand-crafted home decor items (furniture, wall art, & textiles). We would love to send you our latest wholesale catalog and sample pricing.
+
+Best regards,
+{{seller_name}}
+{{seller_company}}</textarea>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+                    <button type="button" id="btnPreview" class="btn-secondary" style="flex: 1;">👁️ Refresh Preview</button>
+                    <button type="submit" id="btnSendCampaign" class="btn-success" style="flex: 1;">🚀 Send Campaign Now →</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right: Live Email Preview Box (Clean Realistic Paper Envelope View) -->
+        <div class="card-white" style="background: #FFFFFF; border-color: var(--border-medium);">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding-bottom: 0.75rem; margin-bottom: 1rem;">
+                <h3 style="font-size: 1.1rem; color: var(--text-primary);">📱 Live Recipient Preview</h3>
+                <span class="badge badge-success">CAN-SPAM Verified</span>
+            </div>
+
+            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.6;">
+                <div><strong style="color: var(--text-primary);">From:</strong> {{ profile.from_name }} &lt;{{ profile.from_email }}&gt;</div>
+                <div><strong style="color: var(--text-primary);">To:</strong> Sample Buyer (&lt;purchasing@buyerstore.com&gt;)</div>
+                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed var(--border-light);">
+                    <strong style="color: var(--text-primary);">Subject:</strong> <span id="previewSubject" style="color: var(--primary); font-weight: 700;"></span>
+                </div>
+            </div>
+
+            <div id="previewBodyContainer" style="background: #F8FAFC; padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-light); min-height: 250px; font-size: 0.925rem; color: var(--text-primary); line-height: 1.7;">
+                <!-- Live HTML Preview rendered here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.chip {
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: #DC2626;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+.chip:hover {
+    background: #DC2626;
+    color: #FFFFFF;
+    border-color: #DC2626;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/campaign.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Register Seller Account - Home Decor Buyer Finder{% endblock %}
+
+{% block content %}
+<div class="search-container" style="max-width: 620px; margin-top: 1rem;">
+    <div class="card-white">
+        <div class="search-header" style="margin-bottom: 1.75rem;">
+            <h2>Register US Seller Account</h2>
+            <p class="search-subtitle" style="font-size: 0.95rem;">Start discovering wholesale & retail buyers across America</p>
+        </div>
+
+        <form method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+            
+            <div class="search-grid">
+                <div class="form-group">
+                    <label class="form-label">Username *</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}<span style="color: var(--danger); font-size: 0.8rem; margin-top: 3px;">{{ form.username.errors.0 }}</span>{% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address *</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}<span style="color: var(--danger); font-size: 0.8rem; margin-top: 3px;">{{ form.email.errors.0 }}</span>{% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password *</label>
+                    {{ form.password }}
+                    {% if form.password.errors %}<span style="color: var(--danger); font-size: 0.8rem; margin-top: 3px;">{{ form.password.errors.0 }}</span>{% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Confirm Password *</label>
+                    {{ form.confirm_password }}
+                    {% if form.confirm_password.errors %}<span style="color: var(--danger); font-size: 0.8rem; margin-top: 3px;">{{ form.confirm_password.errors.0 }}</span>{% endif %}
+                </div>
+
+                <div class="form-group search-grid-full">
+                    <label class="form-label">Company / Brand Name *</label>
+                    {{ form.company_name }}
+                    {% if form.company_name.errors %}<span style="color: var(--danger); font-size: 0.8rem; margin-top: 3px;">{{ form.company_name.errors.0 }}</span>{% endif %}
+                </div>
+
+                <div class="form-group search-grid-full">
+                    <label class="form-label">Sender Name (Shown in Email Pitch) *</label>
+                    {{ form.from_name }}
+                    {% if form.from_name.errors %}<span style="color: var(--danger); font-size: 0.8rem; margin-top: 3px;">{{ form.from_name.errors.0 }}</span>{% endif %}
+                </div>
+
+                <div class="form-group search-grid-full">
+                    <label class="form-label">Physical Postal Address (Required for CAN-SPAM Footer) *</label>
+                    {{ form.postal_address }}
+                    {% if form.postal_address.errors %}<span style="color: var(--danger); font-size: 0.8rem; margin-top: 3px;">{{ form.postal_address.errors.0 }}</span>{% endif %}
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1.5rem;">
+                Create Account & Find Buyers →
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem; border-top: 1px solid var(--border-light); padding-top: 1rem; font-size: 0.875rem; color: var(--text-muted);">
+            Already registered? 
+            <a href="{% url 'login' %}" style="font-weight: 600; color: var(--primary);">Sign In Here</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,262 @@
+/* Buttons */
+.btn-primary, .btn-primary-sm {
+    background-color: var(--primary);
+    color: #FFFFFF;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(220, 38, 38, 0.25), 0 2px 4px 0 rgba(220, 38, 38, 0.15);
+}
+
+.btn-primary {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+}
+
+.btn-primary-sm {
+    padding: 0.45rem 1rem;
+    font-size: 0.85rem;
+}
+
+.btn-primary:hover, .btn-primary-sm:hover {
+    background-color: var(--primary-hover);
+    color: #FFFFFF;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
+}
+
+.btn-primary:disabled, .btn-primary-sm:disabled {
+    background-color: #E2E8F0;
+    color: #94A3B8;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Secondary Button (Neutral White with Crisp Slate Border) */
+.btn-secondary {
+    background: #FFFFFF;
+    border: 1px solid var(--border-medium);
+    color: var(--text-primary);
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-xs);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-subtle);
+    border-color: #94A3B8;
+    color: var(--text-primary);
+}
+
+/* Success / Emerald Button (for Campaigns / Sending) */
+.btn-success {
+    background-color: var(--success);
+    color: #FFFFFF;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(5, 150, 105, 0.25);
+}
+
+.btn-success:hover {
+    background-color: var(--success-hover);
+    color: #FFFFFF;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(5, 150, 105, 0.3);
+}
+
+/* Cards (Clean White Card with Subtle Crisp Shadow) */
+.card-glass, .card-white {
+    background: #FFFFFF;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 2.25rem;
+    box-shadow: var(--shadow-card);
+}
+
+/* Inputs & Form Controls */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    margin-bottom: 1.25rem;
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+
+.form-control {
+    background: #FFFFFF;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-md);
+    padding: 0.7rem 0.95rem;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.925rem;
+    transition: all 0.15s ease;
+    box-shadow: var(--shadow-xs);
+}
+
+.form-control::placeholder {
+    color: var(--text-muted);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: var(--shadow-red-focus);
+}
+
+select.form-control {
+    cursor: pointer;
+    background-color: #FFFFFF;
+    color: var(--text-primary);
+}
+
+select.form-control option {
+    background: #FFFFFF;
+    color: var(--text-primary);
+}
+
+/* Badges with High Contrast Readability */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+/* Green / Valid */
+.badge-success {
+    background-color: var(--success-light);
+    color: var(--success-text);
+    border: 1px solid var(--success-border);
+}
+
+/* Red / Danger / Invalid */
+.badge-danger {
+    background-color: var(--danger-light);
+    color: var(--danger-text);
+    border: 1px solid var(--danger-border);
+}
+
+/* Amber / Warning / Risky */
+.badge-warning {
+    background-color: var(--warning-light);
+    color: var(--warning-text);
+    border: 1px solid var(--warning-border);
+}
+
+/* Neutral / Info */
+.badge-info {
+    background-color: #F1F5F9;
+    color: #334155;
+    border: 1px solid #CBD5E1;
+}
+
+/* Messages / Alerts */
+.messages-container {
+    margin-bottom: 1.5rem;
+}
+
+.alert {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.95rem 1.25rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 0.75rem;
+    background: #FFFFFF;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-xs);
+}
+
+.alert-success {
+    border-color: var(--success-border);
+    background-color: var(--success-light);
+    color: var(--success-text);
+}
+
+.alert-error {
+    border-color: var(--danger-border);
+    background-color: var(--danger-light);
+    color: var(--danger-text);
+}
+
+.alert-icon { font-size: 1.1rem; }
+.alert-text { flex: 1; font-size: 0.925rem; font-weight: 500; }
+.alert-close {
+    background: none;
+    border: none;
+    color: inherit;
+    opacity: 0.7;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0 4px;
+}
+.alert-close:hover { opacity: 1; }
+
+/* Quota Banner Widget - Crisp White Card with Subtle Red/Green Accents */
+.quota-banner {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    background: #FFFFFF;
+    border: 1px solid var(--border-light);
+    padding: 1.1rem 1.75rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.75rem;
+    box-shadow: var(--shadow-card);
+}
+
+.quota-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.quota-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.quota-value {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}

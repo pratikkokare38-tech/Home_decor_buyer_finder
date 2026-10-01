@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Campaign Summary - DecorFinder{% endblock %}
+
+{% block content %}
+<div class="search-container" style="max-width: 850px;">
+    <div class="card-white">
+        <div class="search-header" style="text-align: left; margin-bottom: 1.5rem;">
+            <h2>Campaign Delivery Summary</h2>
+            <p class="search-subtitle">Status: <span class="badge badge-success">{{ campaign.status|upper }}</span> • Total Recipients: <strong>{{ campaign.total_recipients }}</strong></p>
+        </div>
+
+        <div class="quota-banner" style="margin-bottom: 1.75rem;">
+            <div class="quota-item">
+                <span class="quota-label">Successfully Sent</span>
+                <span class="quota-value" style="color: var(--success);">{{ campaign.sent_count }}</span>
+            </div>
+            <div class="quota-item" style="border-left: 1px solid var(--border-light); padding-left: 2rem;">
+                <span class="quota-label">Failed / Opt-Out Skipped</span>
+                <span class="quota-value" style="color: var(--danger);">{{ campaign.failed_count }}</span>
+            </div>
+        </div>
+
+        <h3 style="font-size: 1.15rem; margin-bottom: 1rem;">Per-Email Delivery Log</h3>
+        <div class="results-table-wrapper" style="border: 1px solid var(--border-light);">
+            <table class="table-results">
+                <thead>
+                    <tr>
+                        <th>Recipient</th>
+                        <th>Subject</th>
+                        <th>Status</th>
+                        <th>Sent At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td>
+                            <strong style="color: var(--text-primary);">{{ log.buyer.business_name }}</strong>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">{{ log.recipient_email }}</div>
+                        </td>
+                        <td style="font-size: 0.9rem;">{{ log.subject }}</td>
+                        <td>
+                            {% if log.status == 'sent' %}
+                                <span class="badge badge-success">Sent</span>
+                            {% elif log.status == 'queued' %}
+                                <span class="badge badge-warning">Queued</span>
+                            {% else %}
+                                <span class="badge badge-danger">Failed / Opt-Out</span>
+                            {% endif %}
+                        </td>
+                        <td style="font-size: 0.85rem; color: var(--text-secondary);">{{ log.sent_at|date:"H:i:s" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 1.75rem; text-align: right;">
+            <a href="{% url 'campaign_history' %}" class="btn-primary">View All Email Logs →</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

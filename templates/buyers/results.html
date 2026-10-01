@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Buyer Results - {{ search_query.city }}, {{ search_query.state }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/results.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="results-container">
+    <div class="results-header">
+        <div>
+            <h1>Buyers in {{ search_query.city }}, {{ search_query.state }}</h1>
+            <p class="search-subtitle">
+                Category: <strong style="color: var(--text-primary);">{{ search_query.category }}</strong> • Found: <strong style="color: var(--text-primary);">{{ total_found }} businesses</strong> (<span style="color: var(--success); font-weight: 700;">{{ valid_emails_count }} verified emails</span>)
+            </p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+            <a href="{% url 'search_page' %}" class="btn-secondary">← New Search</a>
+            <button id="btnCreateCampaign" class="btn-success" disabled>
+                ✉️ Create Pitch Campaign (<span id="selectedCount">0</span> Selected)
+            </button>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="card-white" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 0.85rem;">
+            <span style="font-weight: 700; font-size: 0.875rem; color: var(--text-secondary);">Filter Emails:</span>
+            <select id="filterEmailStatus" class="form-control" style="padding: 0.4rem 0.85rem; width: 180px;">
+                <option value="all">All Businesses</option>
+                <option value="valid" selected>Verified Valid Only</option>
+                <option value="has_email">Has Any Email</option>
+            </select>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+            <span class="badge badge-success">{{ valid_emails_count }} Valid Emails</span>
+            <span class="badge badge-info">{{ total_found }} Total Businesses</span>
+        </div>
+    </div>
+
+    <div class="card-white" style="padding: 0; overflow: hidden;">
+        <div class="results-table-wrapper">
+            <table class="table-results" id="buyersTable">
+                <thead>
+                    <tr>
+                        <th style="width: 44px; text-align: center;">
+                            <input type="checkbox" id="selectAllCheckbox">
+                        </th>
+                        <th>Business Name</th>
+                        <th>Website & Domain</th>
+                        <th>Email Address</th>
+                        <th>Source</th>
+                        <th>Email Status</th>
+                        <th>Location</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for b in buyers %}
+                    <tr class="buyer-row" data-status="{{ b.email_status }}" data-has-email="{% if b.email %}true{% else %}false{% endif %}">
+                        <td style="text-align: center;">
+                            <input type="checkbox" class="buyer-checkbox" value="{{ b.id }}" {% if b.email_status == 'valid' %}checked{% endif %}>
+                        </td>
+                        <td>
+                            <strong style="color: var(--text-primary); font-size: 0.95rem;">{{ b.business_name }}</strong>
+                            {% if b.phone %}<div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">📞 {{ b.phone }}</div>{% endif %}
+                        </td>
+                        <td>
+                            {% if b.website %}
+                                <a href="{{ b.website }}" target="_blank" rel="noopener" style="font-weight: 500;">{{ b.domain }} ↗</a>
+                            {% else %}
+                                <span style="color: var(--text-muted);">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if b.email %}
+                                <code>{{ b.email }}</code>
+                            {% else %}
+                                <span style="color: var(--text-muted); font-size: 0.825rem; font-style: italic;">No email found</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if b.email_source == 'map_data' %}
+                                <span class="badge badge-info">Map Data</span>
+                            {% elif b.email_source == 'crawler' %}
+                                <span class="badge badge-success">Crawler</span>
+                            {% elif b.email_source == 'hunter' %}
+                                <span class="badge badge-warning">Hunter.io</span>
+                            {% else %}
+                                <span style="color: var(--text-muted);">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if b.email_status == 'valid' %}
+                                <span class="badge badge-success">Valid</span>
+                            {% elif b.email_status == 'risky' %}
+                                <span class="badge badge-warning">Risky</span>
+                            {% else %}
+                                <span class="badge badge-danger">Unverified</span>
+                            {% endif %}
+                        </td>
+                        <td style="font-size: 0.875rem; color: var(--text-secondary);">
+                            {{ b.city }}, {{ b.state }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 4rem 1.5rem; color: var(--text-muted);">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔍</div>
+                            <strong style="color: var(--text-primary); font-size: 1.1rem; display: block; margin-bottom: 0.25rem;">No buyers found for this search</strong>
+                            Try expanding the search radius or choosing another home decor category.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/results.js' %}"></script>
+{% endblock %}

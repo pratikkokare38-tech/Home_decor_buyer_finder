@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Email Campaign History & Logs - DecorFinder{% endblock %}
+
+{% block content %}
+<div class="search-container" style="max-width: 1100px;">
+    <div class="results-header">
+        <div>
+            <h1>Email Pitch Campaign Logs</h1>
+            <p class="search-subtitle">Track sent pitch emails, delivery statuses, and CAN-SPAM recipient logs.</p>
+        </div>
+        <div>
+            <a href="{% url 'search_page' %}" class="btn-primary">🔍 Find More Buyers</a>
+        </div>
+    </div>
+
+    <div class="card-white" style="padding: 0; overflow: hidden;">
+        <div class="results-table-wrapper">
+            <table class="table-results">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Buyer Business</th>
+                        <th>Recipient Email</th>
+                        <th>Pitch Subject</th>
+                        <th>Delivery Status</th>
+                        <th>Provider Msg ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td style="font-size: 0.85rem; color: var(--text-secondary);">
+                            {{ log.sent_at|date:"M d, Y H:i" }}
+                        </td>
+                        <td>
+                            <strong style="color: var(--text-primary);">{{ log.buyer.business_name }}</strong>
+                        </td>
+                        <td>
+                            <code>{{ log.recipient_email }}</code>
+                        </td>
+                        <td style="font-size: 0.9rem;">
+                            {{ log.subject }}
+                        </td>
+                        <td>
+                            {% if log.status == 'sent' %}
+                                <span class="badge badge-success">Sent</span>
+                            {% elif log.status == 'queued' %}
+                                <span class="badge badge-warning">Queued</span>
+                            {% else %}
+                                <span class="badge badge-danger">Failed / Opt-Out</span>
+                            {% endif %}
+                        </td>
+                        <td style="font-size: 0.8rem; font-family: monospace; color: var(--text-muted);">
+                            {{ log.provider_message_id|default:"-" }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 4rem 1.5rem; color: var(--text-muted);">
+                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📊</div>
+                            <strong style="color: var(--text-primary); font-size: 1.1rem; display: block; margin-bottom: 0.25rem;">No campaign emails have been sent yet</strong>
+                            Find buyers and compose your first pitch campaign!
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

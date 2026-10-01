@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Find Home Decor Buyers USA - DecorFinder{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="search-container">
+    <!-- Quota Banner Widget -->
+    <div class="quota-banner">
+        <div class="quota-item">
+            <span class="quota-label">Target Market</span>
+            <span class="quota-value">🇺🇸 United States Only</span>
+        </div>
+        <div class="quota-item" style="border-left: 1px solid var(--border-light); padding-left: 2rem;">
+            <span class="quota-label">Hunter.io Free Credits</span>
+            <span class="quota-value" style="color: var(--success);">{{ hunter_remaining }} / {{ hunter_limit }} Left</span>
+        </div>
+        <div class="quota-item" style="border-left: 1px solid var(--border-light); padding-left: 2rem;">
+            <span class="quota-label">Discovery Layer</span>
+            <span class="quota-value" style="color: var(--primary);">Live Free APIs</span>
+        </div>
+    </div>
+
+    <div class="card-white">
+        <div class="search-header">
+            <h1>Discover US Home Decor Buyers</h1>
+            <p class="search-subtitle">Search verified store locations, interior design studios, and showrooms across America using real-time API discovery.</p>
+        </div>
+
+        <form id="buyerSearchForm" method="post">
+            {% csrf_token %}
+            
+            <div class="search-grid">
+                <div class="form-group search-grid-full">
+                    <label class="form-label" for="id_category">Product Category / Store Type</label>
+                    <select name="category" id="id_category" class="form-control" required>
+                        {% for key, cat in categories.items %}
+                            <option value="{{ key }}">{{ cat.label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="id_state">US State</label>
+                    <select name="state" id="id_state" class="form-control" required>
+                        {% for code, name in states.items %}
+                            <option value="{{ code }}" {% if code == 'TX' %}selected{% endif %}>{{ name }} ({{ code }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="id_city">City Name</label>
+                    <input type="text" name="city" id="id_city" class="form-control" value="Austin" placeholder="e.g. Austin, New York, Los Angeles" required>
+                </div>
+
+                <div class="form-group search-grid-full">
+                    <label class="form-label" for="id_radius">Search Radius (km)</label>
+                    <input type="number" name="radius_km" id="id_radius" class="form-control" value="50" min="5" max="200" required>
+                </div>
+            </div>
+
+            <button type="submit" id="btnSubmitSearch" class="btn-primary" style="width: 100%; margin-top: 1.5rem;">
+                ✨ Start Discovery Pipeline & Find Buyers →
+            </button>
+        </form>
+    </div>
+
+    {% if recent_searches %}
+    <div class="card-white" style="margin-top: 2rem; padding: 1.75rem;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 1.25rem;">Recent Searches</h3>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            {% for s in recent_searches %}
+                <div class="recent-search-item">
+                    <div>
+                        <strong style="color: var(--text-primary);">{{ s.city }}, {{ s.state }}</strong> — <span style="color: var(--text-secondary);">{{ s.category }}</span>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">{{ s.created_at|date:"M d, Y H:i" }}</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <span class="badge badge-info">{{ s.total_found }} Buyers</span>
+                        <a href="{% url 'results_page' s.id %}" class="btn-primary-sm">View Results →</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/search.js' %}"></script>
+{% endblock %}

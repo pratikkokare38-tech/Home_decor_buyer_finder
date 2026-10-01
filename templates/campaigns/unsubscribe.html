@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Opt-Out Unsubscribe Confirmation{% endblock %}
+
+{% block content %}
+<div class="search-container" style="max-width: 520px; margin-top: 3rem;">
+    <div class="card-white" style="text-align: center; padding: 3rem 2rem;">
+        {% if success %}
+            <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+            <h2>You Have Been Unsubscribed</h2>
+            <p class="search-subtitle" style="margin-top: 0.75rem; color: var(--text-secondary);">
+                The email address <code style="color: var(--primary);">{{ email }}</code> has been permanently removed from all seller pitch lists. You will not receive any further commercial messages.
+            </p>
+        {% else %}
+            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+            <h2>Invalid Unsubscribe Request</h2>
+            <p class="search-subtitle" style="margin-top: 0.75rem; color: var(--text-secondary);">
+                No email address was specified in the opt-out request.
+            </p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
