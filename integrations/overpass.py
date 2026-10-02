@@ -38,12 +38,21 @@ class OverpassClient(BaseAPIClient):
         tag_filters = "".join([f'node[{t}](around:{radius_meters},{lat},{lon});way[{t}](around:{radius_meters},{lat},{lon});' for t in tags])
         query = f"[out:json][timeout:25];({tag_filters});out center {limit};"
 
-        try:
-            response = self.request("POST", "/interpreter", data={"data": query})
-            data = response.json()
-            ApiUsage.record_usage("overpass", credits=1)
-        except Exception as err:
-            logger.error("Overpass query failed: %s", err)
+        endpoints = [
+            "https://overpass-api.de/api/interpreter",
+            "https://overpass.kumi.systems/api/interpreter"
+        ]
+        data = None
+        for ep in endpoints:
+            try:
+                response = self.request("POST", ep, data={"data": query}, timeout=30)
+                data = response.json()
+                ApiUsage.record_usage("overpass", credits=1)
+                break
+            except Exception as err:
+                logger.warning("Overpass endpoint %s failed: %s", ep, err)
+
+        if not data:
             return []
 
         results = []
