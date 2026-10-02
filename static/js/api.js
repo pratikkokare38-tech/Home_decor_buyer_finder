@@ -2,9 +2,15 @@
  * Shared API Helper module for fetch calls with CSRF header & JSON handling.
  */
 async function apiFetch(url, options = {}) {
+    let csrfToken = window.CSRF_TOKEN || '';
+    if (!csrfToken) {
+        const match = document.cookie.match(/csrftoken=([\w-]+)/);
+        if (match) csrfToken = match[1];
+    }
+
     const headers = {
         'Content-Type': 'application/json',
-        'X-CSRFToken': window.CSRF_TOKEN || '',
+        'X-CSRFToken': csrfToken,
         ...(options.headers || {})
     };
 
