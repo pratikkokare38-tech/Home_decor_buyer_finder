@@ -13,8 +13,8 @@ class WebsiteCrawlerClient:
     Layer 2 Email Finder: Custom contact page web scraper.
     Extracts contact emails directly from buyer websites safely & ethically.
     """
-    TIMEOUT = 8  # seconds timeout
-    MAX_PAGES = 3
+    TIMEOUT = 3  # seconds timeout
+    MAX_PAGES = 2
     USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) DecorFinderBot/1.0 (+http://homedecorbuyerfinder.com)"
     
     # Regex to extract valid emails while ignoring image filenames & common false positives

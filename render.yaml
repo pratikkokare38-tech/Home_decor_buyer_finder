@@ -3,7 +3,7 @@ services:
     name: homedecor-buyer-finder
     runtime: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn config.wsgi:application"
+    startCommand: "gunicorn config.wsgi:application --timeout 120 --workers 2"
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: config.settings.prod

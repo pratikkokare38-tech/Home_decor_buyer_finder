@@ -61,15 +61,14 @@ class DiscoveryPipelineService:
             # Step 3: Deduplicate
             unique_buyers = DeduplicationService.deduplicate(buyers_data)[:max_limit]
 
-            # Step 4: Layered Email Finding (Multithreaded thread pool, max 5 workers)
+            # Step 4: Layered Email Finding (Safe, fast sequential processing)
             processed_buyers = []
-            with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-                futures = [executor.submit(self.email_finder.discover_email, b) for b in unique_buyers]
-                for future in concurrent.futures.as_completed(futures):
-                    try:
-                        processed_buyers.append(future.result())
-                    except Exception:
-                        pass
+            for b in unique_buyers:
+                try:
+                    processed_b = self.email_finder.discover_email(b)
+                    processed_buyers.append(processed_b)
+                except Exception:
+                    processed_buyers.append(b)
 
             # Step 5: Save Buyer models to DB
             saved_count = 0

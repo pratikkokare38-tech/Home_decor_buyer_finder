@@ -14,24 +14,32 @@ class StartSearchAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        category = request.data.get('category', 'all')
-        state = request.data.get('state', 'TX')
-        city = request.data.get('city', 'Austin')
-        radius_km = int(request.data.get('radius_km', 50))
+        try:
+            category = request.data.get('category', 'all')
+            state = request.data.get('state', 'TX')
+            city = request.data.get('city', 'Austin')
+            radius_km = int(request.data.get('radius_km', 50))
 
-        search_query = SearchQuery.objects.create(
-            seller=request.user,
-            category=category,
-            state=state,
-            city=city,
-            radius_km=radius_km,
-            status='pending'
-        )
+            search_query = SearchQuery.objects.create(
+                seller=request.user,
+                category=category,
+                state=state,
+                city=city,
+                radius_km=radius_km,
+                status='pending'
+            )
 
-        pipeline = DiscoveryPipelineService()
-        pipeline.run_search(search_query)
+            pipeline = DiscoveryPipelineService()
+            pipeline.run_search(search_query)
 
-        return Response(SearchQuerySerializer(search_query).data, status=status.HTTP_201_CREATED)
+            return Response(SearchQuerySerializer(search_query).data, status=status.HTTP_201_CREATED)
+        except Exception as err:
+            return Response({
+                'error': {
+                    'code': 'SEARCH_ERROR',
+                    'message': str(err)
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class SearchQueryListAPIView(APIView):
