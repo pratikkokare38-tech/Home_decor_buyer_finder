@@ -28,7 +28,10 @@ class BaseAPIClient:
         self.session.mount("https://", adapter)
 
     def request(self, method: str, endpoint: str, **kwargs) -> requests.Response:
-        url = f"{self.base_url}{endpoint}" if self.base_url else endpoint
+        if endpoint.startswith("http://") or endpoint.startswith("https://"):
+            url = endpoint
+        else:
+            url = f"{self.base_url}{endpoint}" if self.base_url else endpoint
         if 'timeout' not in kwargs:
             kwargs['timeout'] = self.DEFAULT_TIMEOUT
 
