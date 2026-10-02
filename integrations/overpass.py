@@ -92,12 +92,6 @@ class OverpassClient(BaseAPIClient):
 
         # Cache for 7 days
         if results:
-            expires_at = timezone.now() + datetime.timedelta(days=7)
-            ApiCache.objects.create(
-                cache_key=cache_key,
-                provider="overpass",
-                response_data=results,
-                expires_at=expires_at
-            )
+            ApiCache.set_cache(cache_key, "overpass", results, ttl_days=7)
 
         return results

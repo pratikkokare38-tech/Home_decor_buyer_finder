@@ -95,15 +95,7 @@ class WebsiteCrawlerClient:
         final_emails.sort(key=lambda e: 0 if any(e.startswith(p) for p in ['info@', 'sales@', 'hello@', 'contact@', 'buyer@', 'orders@']) else 1)
 
         # Cache result for 30 days
-        import datetime
-        from django.utils import timezone
-        expires_at = timezone.now() + datetime.timedelta(days=30)
-        ApiCache.objects.create(
-            cache_key=cache_key,
-            provider="crawler",
-            response_data=final_emails,
-            expires_at=expires_at
-        )
+        ApiCache.set_cache(cache_key, "crawler", final_emails, ttl_days=30)
 
         return final_emails
 

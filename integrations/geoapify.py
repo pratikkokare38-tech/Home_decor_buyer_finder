@@ -44,13 +44,7 @@ class GeoapifyClient(BaseAPIClient):
                         "state": state,
                         "formatted": first.get("display_name", f"{city}, {state}")
                     }
-                    expires_at = timezone.now() + datetime.timedelta(days=30)
-                    ApiCache.objects.create(
-                        cache_key=cache_key,
-                        provider="nominatim",
-                        response_data=res,
-                        expires_at=expires_at
-                    )
+                    ApiCache.set_cache(cache_key, "nominatim", res, ttl_days=30)
                     return res
             except Exception:
                 pass
@@ -83,14 +77,7 @@ class GeoapifyClient(BaseAPIClient):
             }
 
             # Cache for 30 days
-            expires_at = timezone.now() + datetime.timedelta(days=30)
-            ApiCache.objects.create(
-                cache_key=cache_key,
-                provider="geoapify",
-                response_data=result,
-                expires_at=expires_at
-            )
-
+            ApiCache.set_cache(cache_key, "geoapify", result, ttl_days=30)
             return result
         except Exception:
             return None
@@ -154,13 +141,7 @@ class GeoapifyClient(BaseAPIClient):
 
             # Cache for 7 days
             if results:
-                expires_at = timezone.now() + datetime.timedelta(days=7)
-                ApiCache.objects.create(
-                    cache_key=cache_key,
-                    provider="geoapify",
-                    response_data=results,
-                    expires_at=expires_at
-                )
+                ApiCache.set_cache(cache_key, "geoapify", results, ttl_days=7)
 
             return results
         except Exception:

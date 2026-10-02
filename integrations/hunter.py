@@ -64,14 +64,7 @@ class HunterClient(BaseAPIClient):
                     })
 
             # Cache for 30 days
-            expires_at = timezone.now() + datetime.timedelta(days=30)
-            ApiCache.objects.create(
-                cache_key=cache_key,
-                provider="hunter",
-                response_data=emails,
-                expires_at=expires_at
-            )
-
+            ApiCache.set_cache(cache_key, "hunter", emails, ttl_days=30)
             return emails
 
         except QuotaExceededError:
@@ -119,14 +112,7 @@ class HunterClient(BaseAPIClient):
             }
 
             # Cache verification result for 30 days
-            expires_at = timezone.now() + datetime.timedelta(days=30)
-            ApiCache.objects.create(
-                cache_key=cache_key,
-                provider="hunter",
-                response_data=result,
-                expires_at=expires_at
-            )
-
+            ApiCache.set_cache(cache_key, "hunter", result, ttl_days=30)
             return result
 
         except Exception:

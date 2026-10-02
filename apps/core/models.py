@@ -21,6 +21,21 @@ class ApiCache(models.Model):
     def is_valid(self):
         return timezone.now() < self.expires_at
 
+    @classmethod
+    def set_cache(cls, cache_key: str, provider: str, response_data, ttl_days: int = 7):
+        try:
+            expires_at = timezone.now() + datetime.timedelta(days=ttl_days)
+            cls.objects.update_or_create(
+                cache_key=cache_key,
+                defaults={
+                    'provider': provider,
+                    'response_data': response_data,
+                    'expires_at': expires_at
+                }
+            )
+        except Exception:
+            pass
+
     def __str__(self):
         return f"{self.provider}:{self.cache_key} (valid until {self.expires_at})"
 
@@ -41,12 +56,24 @@ class ApiUsage(models.Model):
 
     @classmethod
     def record_usage(cls, provider: str, credits: int = 1):
-        today = timezone.now().date()
-        usage, _ = cls.objects.get_or_create(provider=provider, date=today)
-        usage.calls_count += 1
-        usage.credits_used += credits
-        usage.save()
-        return usage
+        try:
+            today = timezone.now().date()
+            usage, _ = cls.objects.get_or_create(provider=provider, date=today)
+            usage.calls_count += 1
+            usage.credits_used += credits
+            usage.save()
+            return usage
+        except Exception:
+            try:
+                usage = cls.objects.filter(provider=provider, date=timezone.now().date()).first()
+                if usage:
+                    usage.calls_count += 1
+                    usage.credits_used += credits
+                    usage.save()
+                    return usage
+            except Exception:
+                pass
+            return None
 
     @classmethod
     def get_monthly_credits(cls, provider: str) -> int:
