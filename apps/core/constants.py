@@ -3,22 +3,22 @@ BUYER_CATEGORIES = {
     'furniture': {
         'label': 'Furniture Stores & Showrooms',
         'geoapify_categories': ['commercial.houseware_and_furniture', 'commercial.furniture'],
-        'osm_tags': ['shop=furniture'],
+        'osm_tags': ['shop=furniture', 'shop=interior_decoration', 'shop=bed'],
     },
     'interior_decoration': {
         'label': 'Interior Decor & Design Boutiques',
         'geoapify_categories': ['commercial.interior_decoration', 'commercial.antiques'],
-        'osm_tags': ['shop=interior_decoration', 'shop=antiques'],
+        'osm_tags': ['shop=interior_decoration', 'shop=antiques', 'shop=curtain', 'shop=lighting'],
     },
     'gift_and_souvenir': {
         'label': 'Gift & Artisan Specialty Shops',
         'geoapify_categories': ['commercial.gift_and_souvenir', 'commercial.craft'],
-        'osm_tags': ['shop=gift', 'shop=craft'],
+        'osm_tags': ['shop=gift', 'shop=craft', 'shop=art', 'shop=boutique'],
     },
     'houseware': {
         'label': 'Houseware & Home Accessories Stores',
         'geoapify_categories': ['commercial.houseware_and_furniture', 'commercial.hardware'],
-        'osm_tags': ['shop=houseware'],
+        'osm_tags': ['shop=houseware', 'shop=kitchen', 'shop=pottery', 'shop=tableware'],
     },
     'all': {
         'label': 'All US Home Decor Buyers',
@@ -29,7 +29,7 @@ BUYER_CATEGORIES = {
             'commercial.gift_and_souvenir',
             'commercial.antiques'
         ],
-        'osm_tags': ['shop=furniture', 'shop=interior_decoration', 'shop=gift', 'shop=antiques'],
+        'osm_tags': ['shop=furniture', 'shop=interior_decoration', 'shop=gift', 'shop=antiques', 'shop=houseware', 'shop=craft', 'shop=lighting'],
     }
 }
 
