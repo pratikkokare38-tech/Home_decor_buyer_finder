@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: homedecor-buyer-finder
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.prod
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com,localhost,127.0.0.1"
+      - key: GEOAPIFY_API_KEY
+        sync: false
+      - key: HUNTER_API_KEY
+        sync: false
+      - key: BREVO_API_KEY
+        sync: false
+      - key: EMAIL_PROVIDER
+        value: "brevo"
+      - key: DEFAULT_FROM_EMAIL
+        value: "sales@homedecorbuyerfinder.com"
+      - key: DEFAULT_FROM_NAME
+        value: "Home Decor Buyer Finder"
+      - key: SENDER_POSTAL_ADDRESS
+        value: "123 Main Street, Suite 400, Austin, TX 78701"
