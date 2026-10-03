@@ -4,16 +4,18 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 
+from integrations.base import BaseAPIClient
 from apps.core.utils import clean_email, generate_cache_key
 from apps.core.models import ApiCache
 
 
-class WebsiteCrawlerClient:
+class WebsiteCrawlerClient(BaseAPIClient):
     """
     Layer 2 Email Finder: Custom contact page web scraper.
     Extracts contact emails directly from buyer websites safely & ethically.
+    Inherits BaseAPIClient to ensure retry and timeout governance.
     """
-    TIMEOUT = 3  # seconds timeout
+    TIMEOUT = 2  # seconds timeout per page
     MAX_PAGES = 2
     USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) DecorFinderBot/1.0 (+http://homedecorbuyerfinder.com)"
     
@@ -23,6 +25,9 @@ class WebsiteCrawlerClient:
         re.IGNORECASE
     )
     EXCLUDE_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp', '.pdf', '.css', '.js')
+
+    def __init__(self):
+        super().__init__(base_url="", retries=1, backoff_factor=0.2)
 
     def find_emails(self, website_url: str) -> List[str]:
         """
@@ -43,11 +48,9 @@ class WebsiteCrawlerClient:
         pages_to_crawl = [website_url]
         visited_urls = set()
 
-        headers = {"User-Agent": self.USER_AGENT}
-
         try:
             # 1. Fetch homepage first
-            resp = requests.get(website_url, headers=headers, timeout=self.TIMEOUT)
+            resp = self.request("GET", website_url, timeout=self.TIMEOUT)
             visited_urls.add(website_url)
 
             if resp.status_code == 200:
@@ -55,7 +58,7 @@ class WebsiteCrawlerClient:
                 discovered_emails.update(self._extract_emails_from_text(html))
 
                 # 2. Find contact or about links on homepage
-                soup = BeautifulSoup(html, 'lxml')
+                soup = BeautifulSoup(html, 'html.parser')
                 for a_tag in soup.find_all('a', href=True):
                     href = a_tag['href'].strip()
                     if href.startswith('mailto:'):
@@ -80,7 +83,7 @@ class WebsiteCrawlerClient:
                     continue
                 visited_urls.add(page_url)
                 try:
-                    sub_resp = requests.get(page_url, headers=headers, timeout=self.TIMEOUT)
+                    sub_resp = self.request("GET", page_url, timeout=self.TIMEOUT)
                     if sub_resp.status_code == 200:
                         discovered_emails.update(self._extract_emails_from_text(sub_resp.text))
                 except Exception:

@@ -40,6 +40,13 @@
         </div>
     </div>
 
+    {% if search_query.status == 'failed' %}
+    <div class="card-white" style="border-left: 4px solid var(--danger); margin-bottom: 1.5rem; padding: 1.25rem 1.5rem;">
+        <h4 style="color: var(--danger); margin-bottom: 0.25rem;">⚠️ Search Alert</h4>
+        <p style="color: var(--text-secondary); margin: 0;">{{ search_query.error_message|default:"Could not discover buyers in this specific location. Please try expanding the radius or searching a nearby major city." }}</p>
+    </div>
+    {% endif %}
+
     <div class="card-white" style="padding: 0; overflow: hidden;">
         <div class="results-table-wrapper">
             <table class="table-results" id="buyersTable">
@@ -109,7 +116,7 @@
                         <td colspan="7" style="text-align: center; padding: 4rem 1.5rem; color: var(--text-muted);">
                             <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔍</div>
                             <strong style="color: var(--text-primary); font-size: 1.1rem; display: block; margin-bottom: 0.25rem;">No buyers found for this search</strong>
-                            Try expanding the search radius or choosing another home decor category.
+                            Try expanding the search radius or choosing another home decor category or state.
                         </td>
                     </tr>
                     {% endfor %}

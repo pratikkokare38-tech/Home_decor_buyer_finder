@@ -36,12 +36,15 @@ class VerificationService:
         if domain in DISPOSABLE_DOMAINS:
             return 'invalid', 'Disposable email domain'
 
-        # 3. DNS MX Record lookup
+        # 3. DNS MX Record lookup (fast bounded resolver)
         try:
-            records = dns.resolver.resolve(domain, 'MX')
+            resolver = dns.resolver.Resolver()
+            resolver.lifetime = 1.5
+            resolver.timeout = 1.5
+            records = resolver.resolve(domain, 'MX')
             if not records:
                 return 'invalid', 'No MX records found'
             return 'valid', 'Valid MX records'
         except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN, dns.exception.DNSException, Exception):
-            # If DNS lookup is unresolvable during testing/offline, default to valid syntax check
+            # If DNS lookup is unresolvable or network offline, default to valid syntax check
             return 'valid', 'Local syntax check passed'

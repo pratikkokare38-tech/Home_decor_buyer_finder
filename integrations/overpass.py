@@ -16,12 +16,19 @@ class OverpassClient(BaseAPIClient):
     OpenStreetMap Overpass API Client (Fallback Places Discovery).
     Free, no API key required. Respect polite query rates.
     """
+    ENDPOINTS = [
+        "https://overpass-api.de/api/interpreter",
+        "https://overpass.kumi.systems/api/interpreter",
+        "https://maps.mail.ru/osm/tools/overpass/api/interpreter"
+    ]
+
     def __init__(self):
         super().__init__(base_url="https://overpass-api.de/api")
 
     def search_shops(self, category: str, lat: float, lon: float, radius_km: int = 50, limit: int = 30) -> List[Dict]:
         """
         Query OpenStreetMap nodes & ways for home decor stores near lat/lon.
+        Uses optimized Overpass QL regex union queries for sub-second execution.
         """
         cache_key = generate_cache_key("overpass_shops", {
             "category": category, "lat": round(lat, 3), "lon": round(lon, 3), "radius": radius_km, "limit": limit
@@ -32,32 +39,29 @@ class OverpassClient(BaseAPIClient):
 
         cat_info = BUYER_CATEGORIES.get(category, BUYER_CATEGORIES['all'])
         tags = cat_info.get('osm_tags', ['shop=furniture'])
+        
+        # Build ultra-fast regex filter for Overpass: shop~"^(furniture|interior_decoration|...)$"
+        shop_values = "|".join([t.split("=")[-1] for t in tags if "=" in t])
+        radius_meters = int(radius_km * 1000)
+        query = f'[out:json][timeout:15];(node["shop"~"^({shop_values})$"](around:{radius_meters},{lat},{lon});way["shop"~"^({shop_values})$"](around:{radius_meters},{lat},{lon}););out center {limit};'
 
-        # Overpass QL query around radius_meters
-        radius_meters = radius_km * 1000
-        tag_filters = "".join([f'node[{t}](around:{radius_meters},{lat},{lon});way[{t}](around:{radius_meters},{lat},{lon});' for t in tags])
-        query = f"[out:json][timeout:25];({tag_filters});out center {limit};"
-
-        endpoints = [
-            "https://overpass-api.de/api/interpreter",
-            "https://overpass.kumi.systems/api/interpreter"
-        ]
         data = None
-        for ep in endpoints:
+        for ep in self.ENDPOINTS:
             try:
-                response = self.request("POST", ep, data={"data": query}, timeout=30)
-                data = response.json()
-                ApiUsage.record_usage("overpass", credits=1)
-                break
+                response = self.request("POST", ep, data={"data": query}, timeout=15)
+                if response.status_code == 200:
+                    data = response.json()
+                    ApiUsage.record_usage("overpass", credits=1)
+                    break
             except Exception as err:
                 logger.warning("Overpass endpoint %s failed: %s", ep, err)
 
-        if not data:
+        if not data or not isinstance(data, dict):
             return []
 
         results = []
-        for element in data.get("elements", []):
-            tags_dict = element.get("tags", {})
+        for element in (data.get("elements") or []):
+            tags_dict = element.get("tags") or {}
             name = tags_dict.get("name")
             if not name:
                 continue
@@ -70,8 +74,8 @@ class OverpassClient(BaseAPIClient):
             housenumber = tags_dict.get("addr:housenumber", "")
             address = f"{housenumber} {street}".strip() or tags_dict.get("addr:full", "")
 
-            elem_lat = element.get("lat") or element.get("center", {}).get("lat", lat)
-            elem_lon = element.get("lon") or element.get("center", {}).get("lon", lon)
+            elem_lat = element.get("lat") or (element.get("center") or {}).get("lat", lat)
+            elem_lon = element.get("lon") or (element.get("center") or {}).get("lon", lon)
 
             buyer = {
                 "business_name": name,
