@@ -88,30 +88,35 @@ class DiscoveryPipelineService:
             # Step 5: Save Buyer models to DB
             saved_count = 0
             for b_data in processed_buyers:
+                if not isinstance(b_data, dict):
+                    continue
                 # Prevent seller level duplicate email spam
                 email = b_data.get('email')
                 if email and Buyer.objects.filter(seller=search_query.seller, email=email).exists():
                     continue
 
-                Buyer.objects.create(
-                    seller=search_query.seller,
-                    search_query=search_query,
-                    business_name=b_data.get('business_name', 'Unknown Business'),
-                    category=search_query.category,
-                    website=b_data.get('website'),
-                    domain=b_data.get('domain', ''),
-                    email=b_data.get('email'),
-                    email_source=b_data.get('email_source', 'none'),
-                    email_status=b_data.get('email_status', 'unverified'),
-                    phone=b_data.get('phone'),
-                    address=b_data.get('address'),
-                    city=b_data.get('city') or search_query.city,
-                    state=b_data.get('state') or search_query.state,
-                    lat=b_data.get('lat'),
-                    lon=b_data.get('lon'),
-                    source_api=b_data.get('source_api', 'geoapify')
-                )
-                saved_count += 1
+                try:
+                    Buyer.objects.create(
+                        seller=search_query.seller,
+                        search_query=search_query,
+                        business_name=str(b_data.get('business_name') or 'Unknown Business')[:250],
+                        category=str(search_query.category)[:95],
+                        website=str(b_data.get('website'))[:490] if b_data.get('website') else None,
+                        domain=str(b_data.get('domain') or '')[:250],
+                        email=str(b_data.get('email'))[:250] if b_data.get('email') else None,
+                        email_source=str(b_data.get('email_source') or 'none')[:30],
+                        email_status=str(b_data.get('email_status') or 'unverified')[:20],
+                        phone=str(b_data.get('phone'))[:45] if b_data.get('phone') else None,
+                        address=b_data.get('address'),
+                        city=str(b_data.get('city') or search_query.city)[:140],
+                        state=str(b_data.get('state') or search_query.state)[:45],
+                        lat=b_data.get('lat'),
+                        lon=b_data.get('lon'),
+                        source_api=str(b_data.get('source_api') or 'geoapify')[:45]
+                    )
+                    saved_count += 1
+                except Exception as save_err:
+                    logger.warning("Could not save buyer %s: %s", b_data.get('business_name'), save_err)
 
             search_query.status = 'done'
             search_query.total_found = saved_count
